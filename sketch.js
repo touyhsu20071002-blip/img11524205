@@ -41,7 +41,7 @@ function draw() {
   text("AI辨識", 10, 10);
 
   textSize(18);
-  text("11424135", 10, 38);
+  text("11524205", 10, 38);
 
   // 繪製鏡頭畫面
   if (video) {
