@@ -1,13 +1,9 @@
-// Classifier Variable
 let classifier;
-// 模型路徑 (讀取同目錄下的 model.json)
 let imageModelURL = './';
 
-// Video
 let video;
 let label = "載入模型中...";
 
-// Load the model first
 function preload() {
   classifier = ml5.imageClassifier(imageModelURL + 'model.json');
 }
@@ -15,7 +11,7 @@ function preload() {
 function setup() {
   createCanvas(320, 420);
 
-  // 針對 iPhone / iOS Safari 的相機設定
+  // 3. 手機後鏡頭設定
   var constraints = {
     audio: false,
     video: {
@@ -23,16 +19,15 @@ function setup() {
     }
   };
 
-  video = createCapture(constraints, function() {
-    console.log('相機載入成功');
-  });
-  
-  // 修正 iPhone Safari 必備設定：允許網頁內嵌入播放
-  video.elt.setAttribute('playsinline', ''); 
+  video = createCapture(constraints);
   video.size(320, 320);
   video.hide();
 
-  // 開始進行影像辨識
+  // 修正 iPhone 必須加上 playsinline 才能順利顯示影像
+  if (video && video.elt) {
+    video.elt.setAttribute('playsinline', '');
+  }
+
   classifyVideo();
 }
 
@@ -60,14 +55,12 @@ function draw() {
   text(label, width / 2, 398);
 }
 
-// 辨識視訊畫面
 function classifyVideo() {
   if (video && classifier) {
     classifier.classify(video, gotResult);
   }
 }
 
-// 取得辨識結果
 function gotResult(error, results) {
   if (error) {
     console.error(error);
